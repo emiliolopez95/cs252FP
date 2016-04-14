@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+ 
+    <title>URide</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.4/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen" />
+
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+
+    <link href="../static/css/signup.css"
+          th:href="@{css/signup.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+	<form action="#" th:action="@{/signup}" th:object="${user}"
+		method="post">
+		<div class="login-block">
+   			<h1>Sign Up</h1>
+   			<input type="text" value="" placeholder="Email" id="username" th:field="*{email}" />
+   			<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email error</p>
+   			<input type="text" value="" placeholder="Username" id="username" th:field="*{name}" />
+   			<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name error</p>
+  			<input type="password" value="" placeholder="Password" id="password" th:field="*{password}"/>
+   			<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+   			<select id="type"  th:field="*{type}">
+   				<option value="1">User</option>
+   				<option value="2">Host</option>
+   			</select>
+  				<!--  <input type="password" value="" placeholder="Retype Password" id="password" /> -->
+   
+   			<button type="submit" class="btn btn-info" value="Submit">Submit</button>
+</div>
+</form>
+
+</body>
+</html>

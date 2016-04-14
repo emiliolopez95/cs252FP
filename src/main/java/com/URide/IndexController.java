@@ -1,9 +1,11 @@
 package com.URide;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.URide.Database;
@@ -19,14 +21,8 @@ public class IndexController {
 		this.database = database;
 	}
     @RequestMapping("/")
-    String index(){
-    	User user = new User();
-    	user.setName("emilio");
-    	user.setEmail("lopez@purdue.edu");
-    	user.setPassword("pass123");
-    	user.setType(1);
-    	database.saveUser(user);
-    	
+    String index(Model model, HttpSession session){
+    	model.addAttribute("user", new User());
         return "index";
     }
 }

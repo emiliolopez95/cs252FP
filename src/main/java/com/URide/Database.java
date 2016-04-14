@@ -39,6 +39,31 @@ public class Database {
 	String SQL;
 	
 	/**
+	 * Finds a user by unique ID
+	 * 
+	 * @param id
+	 *            unique ID of user
+	 * @return a User
+	 */
+	public User findUserById(Long id) {
+		SQL = "select * from users where id = ?";
+		User user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { id }, new UserMapper());
+		return user;
+	}
+	/**
+	 * Finds a user by the user's name
+	 * 
+	 * @param name
+	 *            user's name (username)
+	 * @return a User
+	 */
+	public User findUserByName(String name) {
+		SQL = "select * from users where name = ?";
+		User user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { name }, new UserMapper());
+		return user;
+	}
+	
+	/**
 	 * Saves a User to the database
 	 * 
 	 * @param user
