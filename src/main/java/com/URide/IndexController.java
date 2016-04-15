@@ -1,5 +1,9 @@
 package com.URide;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -23,6 +27,12 @@ public class IndexController {
     @RequestMapping("/")
     String index(Model model, HttpSession session){
     	model.addAttribute("user", new User());
+    	
+    	Driver drive = database.findDriverByName("nico");
+    	
+    	System.out.println("id: " + drive.getEmail());
+    	
+    	
         return "index";
     }
 }

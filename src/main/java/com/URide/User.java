@@ -17,6 +17,11 @@ public class User {
 	@Pattern(regexp = "[\\w]*", message = "Username contains invalid characters")
 	private String name;
 	
+	@NotNull(message = "Username cannot be null")
+	@Size(min = 4, max = 50, message = "Username must be between 4 and 50 characters long")
+	@Pattern(regexp = "[\\w]*", message = "Username contains invalid characters")
+	private String lastName;
+	
 	@NotNull(message = "Email must not be null")
 	@NotEmpty(message = "Email must not be empty")
 	@Size(max = 254, message = "Email exceeded max length")
@@ -27,14 +32,26 @@ public class User {
 	@NotEmpty(message = "Password must not be empty")
 	private String password;
 	
+	
 	private int type;
 
-	public User(Long id, String name, String password, String email, int type) {
+	public User(Long id, String name, String lastName, String password, String email, int type) {
 		this.id = id;
 		this.name = name;
+		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
 		this.type = type;
+	}
+	public User(String name, String lastName, String password, String email, int type) {
+		this.name = name;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.type = type;
+	}
+	public User(Long id) {
+		this.id = id;
 	}
 	public User(){
 		
@@ -47,7 +64,14 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	public String getLastName() {
+		return lastName;
+	}
+	
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 	public String getPassword() {
 		return password;
 	}
