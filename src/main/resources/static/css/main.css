@@ -74,23 +74,28 @@ nav{
 /*nav ul{
     padding: 30px;
 }
+
 nav ul li{
     display: inline;
     font-size: 30px;
     
     margin-right: 20px;
+
     color: black;
     background-color: aqua;
     font-family: cursive;
 }
+
 span {
 	font: cursive;
 	color: red
 }
+
 ul.posts { 
     margin: 20px auto 40px; 
     font-size: 1.5em;
 }
+
 ul.posts li {
     list-style: none;
 }
@@ -240,3 +245,4 @@ h3 span {
 	.custom-dropdown--green::after {
 		color: rgba(0,0,0,.9);
 	}
+

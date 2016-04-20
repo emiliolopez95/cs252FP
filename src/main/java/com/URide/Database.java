@@ -71,14 +71,16 @@ final class DriverMapper implements RowMapper<Driver> {
 final class RideMapper implements RowMapper<Ride> {
 	
 	public Ride mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Long uid = rs.getLong("id");
+		Long id = rs.getLong("id");
+		Long dId = rs.getLong("did");
+		String dName = rs.getString("dname");
 		String date = rs.getString("date");
 		String arriveTime = rs.getString("atime");
 		String departTime = rs.getString("dtime");
 		String finalPoint = rs.getString("fpoint");
 		String initialPoint = rs.getString("ipoint");
 		String crtDate = rs.getString("crtdate");
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
 		Date createdDate = null;
 		try {
 			createdDate = (Date)formatter.parse(crtDate);
@@ -97,7 +99,7 @@ final class RideMapper implements RowMapper<Ride> {
 		}
 		Ride ride;
 		if(date != null) {
-			ride = new Ride(uid, date, arriveTime, departTime, finalPoint, initialPoint, createdDate);
+			ride = new Ride(id, dId, dName, date, arriveTime, departTime, finalPoint, initialPoint, createdDate);
 			ride.setrIds(rIds);
 		}
 		else {
@@ -133,12 +135,68 @@ public class Database {
 		return user;
 	}
 	/**
+	 * Finds a user by the user's name
+	 * 
+	 * @param name
+	 *            user's name (username)
+	 * @return a User
+	 */
+	public User findUserByName(String name) {
+		SQL = "select * from users where name = ?";
+		User user;
+		try{
+			user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { name }, new UserMapper());
+		}catch (DataAccessException e) {
+			// throw 404
+			throw new ResourceNotFoundException("User");
+		}
+		return user;
+	}
+	/**
+	 * Finds a user by the user's name
+	 * 
+	 * @param name
+	 *            user's name (username)
+	 * @return a User
+	 */
+	public User findUserByEmail(String email) {
+		SQL = "select * from users where email = ?";
+		User user;
+		user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { email }, new UserMapper());
+		return user;
+	}
+	/**
+	 * Saves a User to the database
+	 * 
+	 * @param user
+	 *            User to be saved
+	 */
+	
+	public void saveUser(User user) {
+		if (user.getId() == null) {
+			SQL = "insert into users (name, email, password, type) values (?, ?, ?, ?)";
+			try{
+				jdbcTemplate.update(SQL, user.getName(), user.getEmail(), user.getPassword(), user.getType());
+			}
+			catch (DataAccessException e) {
+				// throw 404
+				throw new ResourceNotFoundException("User Table");
+			}
+		} else {
+			// TODO: update
+			SQL = "update users set name = ?, email = ?, password = ?, type = ?, WHERE id = ?";
+			jdbcTemplate.update(SQL, user.getName(), user.getEmail(), user.getPassword(), user.getType() ,user.getId());
+
+		}
+	}
+	/**
 	 * Finds a rider by unique ID
 	 * 
 	 * @param id
 	 *            unique ID of rider
 	 * @return a Rider
 	 */
+	
 	public Rider findRiderById(Long id) {
 		SQL = "select * from riders where uid = ?";
 		Rider rider;
@@ -164,76 +222,6 @@ public class Database {
 		
 		return rider;
 	}
-	
-	/**
-	 * Finds a Driver by unique ID
-	 * 
-	 * @param id
-	 *            unique ID of Driver
-	 * @return a Driver
-	 */
-	public Driver findDriverById(Long id) {
-		SQL = "select * from drivers where uid = ?";
-		Driver driver;
-		try{
-			driver = (Driver) jdbcTemplate.queryForObject(SQL, new Object[] { id }, new DriverMapper());
-		}catch (DataAccessException e) {
-			// throw 404
-			throw new ResourceNotFoundException("Driver");
-		}	
-		SQL = "select * from users where id = ?";
-		User user;
-		try{
-			user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { id }, new UserMapper());
-		}catch (DataAccessException e) {
-			// throw 404
-			throw new ResourceNotFoundException("User");
-		}
-		driver.setName(user.getName());
-		driver.setLastName(user.getLastName());
-		driver.setEmail(user.getEmail());
-		driver.setPassword(user.getPassword());
-		driver.setType(user.getType());
-		
-		return driver;
-	}
-	/**
-	 * Finds a Ride by unique ID
-	 * 
-	 * @param id
-	 *            unique ID of Ride
-	 * @return a Ride
-	 */
-	public Ride findRideById(Long id) {
-		SQL = "select * from rides where id = ?";
-		Ride ride;
-		try {
-			ride = (Ride) jdbcTemplate.queryForObject(SQL, new Object[] { id }, new RideMapper());
-		} catch (DataAccessException e) {
-			// throw 404
-			throw new ResourceNotFoundException("Ride");
-		}
-		return ride;
-	}
-	/**
-	 * Finds a user by the user's name
-	 * 
-	 * @param name
-	 *            user's name (username)
-	 * @return a User
-	 */
-	public User findUserByName(String name) {
-		SQL = "select * from users where name = ?";
-		User user;
-		try{
-			user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { name }, new UserMapper());
-		}catch (DataAccessException e) {
-			// throw 404
-			throw new ResourceNotFoundException("User");
-		}
-		return user;
-	}
-	
 	/**
 	 * Finds a user by the user's name
 	 * 
@@ -253,7 +241,6 @@ public class Database {
 		Rider rider = findRiderById(user.getId());
 		return rider;
 	}
-	
 	/**
 	 * Finds a user by the user's name
 	 * 
@@ -261,44 +248,18 @@ public class Database {
 	 *            user's name (username)
 	 * @return a User
 	 */
-	public Driver findDriverByName(String name) {
-		SQL = "select * from users where name = ?";
+	public Rider findRiderByEmail(String email) {
+		SQL = "select * from users where email = ?";
 		User user;
 		try{
-			user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { name }, new UserMapper());
+			user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { email }, new UserMapper());
 		}catch (DataAccessException e) {
 			// throw 404
 			throw new ResourceNotFoundException("User");
 		}
-		Driver driver = findDriverById(user.getId());
-		return driver;
+		Rider rider = findRiderById(user.getId());
+		return rider;
 	}
-	
-	/**
-	 * Saves a User to the database
-	 * 
-	 * @param user
-	 *            User to be saved
-	 */
-	
-	public void saveUser(User user) {
-		if (user.getId() == null) {
-			SQL = "insert into users (name, email, password, type) values (?, ?, ?, ?)";
-			try{
-				jdbcTemplate.update(SQL, user.getName(), user.getEmail(), user.getPassword(), user.getType());
-			}
-			catch (DataAccessException e) {
-				// throw 404
-				throw new ResourceNotFoundException("User Table");
-			}
-		} else {
-			// TODO: update
-			SQL = "update users set name = ?, email = ?, password = ?, type = ?, WHERE id = ?";
-			jdbcTemplate.update(SQL, user.getName(), user.getEmail(), user.getPassword(), user.getType() ,user.getId());
-
-		}
-	}
-	
 	/**
 	 * Saves a User to the database
 	 * 
@@ -350,7 +311,76 @@ public class Database {
 			}
 		}
 	}
-	
+	/**
+	 * Finds a Driver by unique ID
+	 * 
+	 * @param id
+	 *            unique ID of Driver
+	 * @return a Driver
+	 */
+	public Driver findDriverById(Long id) {
+		SQL = "select * from drivers where uid = ?";
+		Driver driver;
+		try{
+			driver = (Driver) jdbcTemplate.queryForObject(SQL, new Object[] { id }, new DriverMapper());
+		}catch (DataAccessException e) {
+			// throw 404
+			throw new ResourceNotFoundException("Driver");
+		}	
+		SQL = "select * from users where id = ?";
+		User user;
+		try{
+			user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { id }, new UserMapper());
+		}catch (DataAccessException e) {
+			// throw 404
+			throw new ResourceNotFoundException("User");
+		}
+		driver.setName(user.getName());
+		driver.setLastName(user.getLastName());
+		driver.setEmail(user.getEmail());
+		driver.setPassword(user.getPassword());
+		driver.setType(user.getType());
+		
+		return driver;
+	}
+	/**
+	 * Finds a user by the user's name
+	 * 
+	 * @param name
+	 *            user's name (username)
+	 * @return a User
+	 */
+	public Driver findDriverByName(String name) {
+		SQL = "select * from users where name = ?";
+		User user;
+		try{
+			user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { name }, new UserMapper());
+		}catch (DataAccessException e) {
+			// throw 404
+			throw new ResourceNotFoundException("User");
+		}
+		Driver driver = findDriverById(user.getId());
+		return driver;
+	}
+	/**
+	 * Finds a user by the user's name
+	 * 
+	 * @param name
+	 *            user's name (username)
+	 * @return a User
+	 */
+	public Driver findDriverByEmail(String email) {
+		SQL = "select * from users where email = ?";
+		User user;
+		try{
+			user = (User) jdbcTemplate.queryForObject(SQL, new Object[] { email }, new UserMapper());
+		}catch (DataAccessException e) {
+			// throw 404
+			throw new ResourceNotFoundException("User");
+		}
+		Driver driver = findDriverById(user.getId());
+		return driver;
+	}
 	/**
 	 * Saves a User to the database
 	 * 
@@ -403,6 +433,59 @@ public class Database {
 		}
 	}
 	/**
+	 * Finds a Ride by unique ID
+	 * 
+	 * @param id
+	 *            unique ID of Ride
+	 * @return a Ride
+	 */
+	public Ride findRideById(Long id) {
+		SQL = "select * from rides where id = ?";
+		Ride ride;
+		try {
+			ride = (Ride) jdbcTemplate.queryForObject(SQL, new Object[] { id }, new RideMapper());
+		} catch (DataAccessException e) {
+			// throw 404
+			throw new ResourceNotFoundException("Ride");
+		}
+		return ride;
+	}
+	/**
+	 * Finds a Ride by unique ID
+	 * 
+	 * @param id
+	 *            unique ID of Ride
+	 * @return a Ride
+	 */
+	public List<Ride> findRidesByDate(String date) {
+		SQL = "select * from rides";
+		List<Ride> list = jdbcTemplate.query(SQL, new RideMapper());
+		List<Ride> listReturn = new ArrayList<>();
+		for(Ride ride : list){
+			if(ride.getDate().equals(date)){
+				System.out.println("added "+ ride.getId() + " " + ride.getDate() + " " + ride.getFinalPoint());
+				listReturn.add(ride);
+			}
+		}
+		return listReturn;
+	}
+	/**
+	 * Finds a Ride by unique ID
+	 * 
+	 * @param id
+	 *            unique ID of Ride
+	 * @return a Ride
+	 */
+	public List<Ride> findRidesByDateIPointAndFPoint(String date, String iPoint, String fPoint) {
+		SQL = "select * from rides WHERE date = ? AND ipoint = ? AND fpoint = ?";
+		System.out.println("date: " + date + " iPoint: " + iPoint + " fPoint: " + fPoint);
+		List<Ride> list = jdbcTemplate.query(SQL, new Object[] { date, iPoint, fPoint },new RideMapper());
+		for(Ride ride: list){
+			System.out.println("id: " + ride.getId());
+		}
+		return list;
+	}
+	/**
 	 * Saves a Ride to the database
 	 * 
 	 * @param ride
@@ -414,12 +497,12 @@ public class Database {
 		for(Long tmp : ride.getrIds()){
 			rids = rids + tmp.toString() + " ";
 		}
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String crtDate = formatter.format(ride.getCreatedDate());
 		if (ride.getId() == null) {
-			if(ride.getdId() != null){
-				SQL = "insert into rides (did, date, rids, atime, dtime, ipoint, fpoint, crtdate) values (?, ?, ?, ?, ?, ?, ?, ?)";
-				jdbcTemplate.update(SQL, ride.getdId(), ride.getDate(), rids, ride.getArriveTime(), ride.getDepartTime(), 
+			if(ride.getDId() != null){
+				SQL = "insert into rides (did, dname, date, rids, atime, dtime, ipoint, fpoint, crtdate) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				jdbcTemplate.update(SQL, ride.getDId(), ride.getDName(), ride.getDate(), rids, ride.getArriveTime(), ride.getDepartTime(), 
 							ride.getInitialPoint(), ride.getFinalPoint(), crtDate);
 			}
 			else {
@@ -429,8 +512,8 @@ public class Database {
 
 			}
 		} else {
-			SQL = "update rides set did = ?, rids = ?, date = ?, atime = ?, dtime = ?, ipoint = ?, fpoint = ?, crtdate = ? WHERE id = ?";
-			jdbcTemplate.update(SQL, ride.getdId(), rids, ride.getDate(), ride.getArriveTime(), ride.getDepartTime(), 
+			SQL = "update rides set did = ?, dname =? , rids = ?, date = ?, atime = ?, dtime = ?, ipoint = ?, fpoint = ?, crtdate = ? WHERE id = ?";
+			jdbcTemplate.update(SQL, ride.getDId(), ride.getDName(), rids, ride.getDate(), ride.getArriveTime(), ride.getDepartTime(), 
 						ride.getInitialPoint(), ride.getFinalPoint(), crtDate, ride.getId());
 		}
 	}

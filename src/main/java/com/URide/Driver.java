@@ -19,6 +19,12 @@ public class Driver extends User{
 		this.rides = rides;
 		
 	}
+	public Driver(String name, String lastName, String password,
+			String email, int type) {
+		super(name, lastName, password, email, type);
+		this.rides = new ArrayList<>();
+		
+	}
 	
 	public Driver(Long id,List<Long> rides){
 		super(id);

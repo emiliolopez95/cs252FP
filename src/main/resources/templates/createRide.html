@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+ 
+    <title>URide</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.4/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen" />
+
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+
+    <link href="../static/css/signup.css"
+          th:href="@{css/signup.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+	<form action="#" th:action="@{/ride/create}" th:object="${ride}"
+		method="post">
+		<div class="login-block">
+   			<h1>Create Ride</h1>
+   			<h3>From</h3>
+		      <select name="from" class = "form-control" th:field = "*{initialPoint}">
+	  			<option value="CHI">Chicago</option>
+	  			<option value="IND">Indianapolis</option>
+	  			<option value="PUR">Purdue</option>
+			  </select>
+			  <h3>At</h3>
+		      <input type="time" name="time_depart" th:field="*{departTime}"></input>
+			  <h3>To</h3>
+			  <select name="to" class = "form-control" th:field = "*{finalPoint}" >
+	  			<option value="CHI">Chicago</option>
+	  			<option value="IND">Indianapolis</option>
+	  			<option value="PUR">Purdue</option>
+			  </select>
+			  <h3>At</h3>
+		      <input type="time" name="time_depart" th:field="*{arriveTime}"></input>
+   			  <input type="date" aria-label="hola" th:field="*{date}"></input>
+   			  <input type="submit" value="Submit"></input>
+		</div>
+	</form>
+
+</body>
+</html>

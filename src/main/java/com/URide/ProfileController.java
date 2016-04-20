@@ -10,10 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.URide.Database;
 
 @Controller
+@SessionAttributes("sessionUser")
 public class ProfileController {
 	private final Database database;
 	private final HttpServletRequest request;
@@ -25,6 +27,9 @@ public class ProfileController {
 	}
     @RequestMapping("/login")
     public String login(Model model, @ModelAttribute User u, HttpSession session){
+    	if(session.getAttribute("sessionUser") == null) {
+    		return "redirect:/";
+    	}
     	User user;
     	try {
     		user = database.findUserByName(u.getName());
@@ -42,6 +47,9 @@ public class ProfileController {
     
     @RequestMapping("/user/{uId}")
     public String user(Model model, @PathVariable Long uId, HttpSession session) {
+    	if(session.getAttribute("sessionUser") == null) {
+    		return "/";
+    	}
     	User user;
     	try {
     		user = database.findUserById(uId);

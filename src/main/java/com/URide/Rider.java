@@ -19,6 +19,11 @@ public class Rider extends User{
 		this.rides = rides;
 		
 	}
+	public Rider(String name, String lastName, String password,
+			String email, int type){
+		super(name, lastName, password, email, type);
+		this.rides = new ArrayList<>();
+	}
 	
 	public Rider(Long id,List<Long> rides){
 		super(id);

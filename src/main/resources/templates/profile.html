@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+ 
+    <title>URide</title>
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div th:replace="/fragments/navbar :: navbar"></div>
+	<h2 style="display: inline;" th:text="${suser.name}">user name</h2>
+	<div class="panel panel-default" style="float: right; width: 45%; margin: 2.5%">
+	  <!-- Default panel contents -->
+	  <div class="panel-heading">Rides</div>
+	  	<div class="panel-body">
+	   	 	<p>...</p>
+	  	</div>
+	
+	  	<!-- Table -->
+	  	<table class="table">
+			<tr>
+				<td ></td>
+			</tr>
+	  	</table>
+	</div>
+</body>
+</html>

@@ -8,6 +8,7 @@ public class Ride {
 	private Long id;
 	
 	private Long dId;
+	private String dName;
 	private List<Long> rIds;
 	
 	private String date;
@@ -19,6 +20,18 @@ public class Ride {
 	
 	private Date createdDate;
 	
+	public Ride(Long id, Long dId, String dName, String date,String arriveTime, String departTime, String finalPoint, String initialPoint, Date createdDate) {
+		this.id = id;
+		this.dId = dId;
+		this.dName = dName;
+		this.date = date;
+		this.arriveTime = arriveTime;
+		this.departTime = departTime;
+		this.finalPoint = finalPoint;
+		this.initialPoint = initialPoint;
+		this.createdDate = createdDate;
+		this.rIds = new ArrayList<>();
+	}
 	public Ride(Long dId,  String date,String arriveTime, String departTime, String finalPoint, String initialPoint, Date createdDate) {
 		this.dId = dId;
 		this.date = date;
@@ -39,6 +52,9 @@ public class Ride {
 		this.createdDate = createdDate;
 	}
 	
+	public Ride(){
+		
+	}
 	
 	public Long getId() {
 		return id;
@@ -47,14 +63,21 @@ public class Ride {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getdId() {
+	public Long getDId() {
 		return dId;
 	}
 
-	public void setdId(Long dId) {
+	public void setDId(Long dId) {
 		this.dId = dId;
 	}
 
+	public String getDName() {
+		return dName;
+	}
+
+	public void setDName(String dName) {
+		this.dName = dName;
+	}
 	public String getDate() {
 		return date;
 	}
@@ -83,7 +106,7 @@ public class Ride {
 		return finalPoint;
 	}
 
-	public void setDestinationPoint(String destinationPoint) {
+	public void setFinalPoint(String destinationPoint) {
 		this.finalPoint = destinationPoint;
 	}
 
@@ -107,7 +130,7 @@ public class Ride {
 		return createdDate;
 	}
 	
-	public void setCretedDate(Date createdDate) {
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 	

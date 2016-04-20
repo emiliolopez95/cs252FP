@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.URide.Database;
 
 @Controller
+@SessionAttributes("sessionUser")
 public class IndexController {
 	private final Database database;
 	private final HttpServletRequest request;
@@ -26,13 +28,11 @@ public class IndexController {
 	}
     @RequestMapping("/")
     String index(Model model, HttpSession session){
+    	if(session.getAttribute("sessionUser") != null) {
+    		return "redirect:/ride";
+    	}
     	model.addAttribute("user", new User());
-    	
-    	Driver drive = database.findDriverByName("nico");
-    	
-    	System.out.println("id: " + drive.getEmail());
-    	
-    	
+    	    	
         return "index";
     }
 }

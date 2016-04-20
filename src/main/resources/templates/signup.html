@@ -29,15 +29,12 @@
    			<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name error</p>
   			<input type="password" value="" placeholder="Password" id="password" th:field="*{password}"/>
    			<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-   			<select id="type"  th:field="*{type}">
-   				<option value="1">User</option>
-   				<option value="2">Host</option>
-   			</select>
   				<!--  <input type="password" value="" placeholder="Retype Password" id="password" /> -->
-   
-   			<button type="submit" class="btn btn-info" value="Submit">Submit</button>
-</div>
-</form>
+			<input th:field="*{type}" type="radio" name="type" value="1"/>Rider
+			<input th:field="*{type}" type="radio" name="type" value="2"/>Driver<br></br>
+   			<button type="submit" class="btn btn-info" value="Submit">SignUp</button>
+		</div>
+	</form>
 
 </body>
 </html>

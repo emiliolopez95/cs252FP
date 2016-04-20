@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+ 
+    <title>URide</title>
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div th:replace="/fragments/navbar :: navbar"></div>
+
+	<h2 style="display: inline;" th:text="${suser.name}">user name</h2>
+	<div class="panel panel-default" style="float: left; width: 45%; margin: 2.5%">
+	  <!-- Default panel contents -->
+	  <div class="panel-heading">Rides</div>
+	  	<div class="panel-body">
+	   	 	<p>...</p>
+	  	</div>
+	  	<!-- Table -->
+	  	<table class="table">
+	  		<thead>
+	  			<tr>
+	  				<td >Driver</td>
+	  				<td>Date</td>
+	  				<td th:text = "${'Depart From ' + iPoint +' At:'}">Depart At</td>
+	  				<td th:text = "${'Arrive At ' + fPoint + ' At:'}">Arrive At</td>
+	  			</tr>
+	  		</thead>
+	  		<tbody>
+		  		<div th:each = "ride : ${rides}" >
+		  			<form action="#" th:action="@{/ride/join}" th:object="${ride}"
+						method="post">
+		  			<tr>
+						<td th:text="*{ride.dName}">Driver's Name</td>
+						<td th:text="*{ride.date}">Date</td>
+						<td th:text="*{ride.departTime}">Depart Time</td>
+						<td th:text="*{ride.arriveTime}">Arrive Time</td>
+						<td><input type="submit" value="join" style="width:100%"></input></td>
+					</tr>
+					</form>
+		  		</div>
+	  		</tbody>
+	  	</table>
+	</div>
+	<div>
+		<form th:action="@{/ride/create}" method="get">
+			<input class="btn btn-default btn-lg btn-success" type="submit" 
+					value="New Ride"/>
+		</form>
+	</div>
+</body>
+</html>
