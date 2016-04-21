@@ -81,11 +81,31 @@ public class RideController {
     	return "redirect:/";
     }
     @RequestMapping(value = "/ride/{id}", method = RequestMethod.GET)
-    public String joinRide(Model model, @PathVariable Long id, @ModelAttribute Ride ride, HttpSession session){
+    public String ride(Model model, @PathVariable Long id, @ModelAttribute Ride ride, HttpSession session){
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
     	}
+    	User sUser = (User)session.getAttribute("sessionUser");
+    	System.out.println("userNameride: " + sUser.getName());
+    	Ride ride1 = database.findRideById(id);
     	
+    	model.addAttribute("ride", ride1);
+    	model.addAttribute("suser", sUser);
+    	System.out.println("Rideid: " + id);
+    	return "ride";
+    }
+    
+    @RequestMapping(value = "/ride/join/{id}")
+    public String joinRide(Model model, @PathVariable Long id, HttpSession session){
+    	if(session.getAttribute("sessionUser") == null) {
+    		return "redirect:/";
+    	}
+    	User sUser = (User)session.getAttribute("sessionUser");
+    	Ride ride = database.findRideById(id);
+    	ride.getrIds().add(sUser.getId());
+    	database.saveRide(ride);
+    	model.addAttribute("ride", new Ride());
+    	model.addAttribute("suser", sUser);
     	return "ride";
     }
 }
