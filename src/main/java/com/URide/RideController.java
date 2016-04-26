@@ -1,5 +1,6 @@
 package com.URide;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,11 +57,35 @@ public class RideController {
         return "findRides";
     }
     
+    @RequestMapping("/ride/all")
+    public String allRides(Model model, HttpSession session) throws ParseException{
+    	if(session.getAttribute("sessionUser") == null) {
+    		return "redirect:/";
+    	}
+    	User user = (User)session.getAttribute("sessionUser");
+    	List<Ride> listRides = database.findRidesAllRides();
+    	
+    	Ride rideTest = new Ride();
+    	Date nowDate = new Date();
+    	int i = 1;
+    	for(Ride ride: listRides){
+    		System.out.println(i + ") rides: " + ride.getDate());
+    		i ++;
+    	}
+    	listRides = rideTest.getRidesAfterDate(listRides, nowDate);
+    	listRides = rideTest.sortRidesByDate(listRides);
+    	
+    	model.addAttribute("suser", user);
+    	model.addAttribute("rides", listRides);
+    	    
+        return "allRides";
+    }
     @RequestMapping(value = "/ride/create", method = RequestMethod.GET)
     public String newRide(Model model, HttpSession session){
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
     	}
+    	model.addAttribute("suser",(User) session.getAttribute("sessionUser"));
     	model.addAttribute("ride", new Ride());
     	return "createRide";
     }
@@ -73,14 +98,22 @@ public class RideController {
     	User sUser = (User) session.getAttribute("sessionUser");
     	List<Long> rIds = new ArrayList<>();
     	ride.setrIds(rIds);
-    	ride.setDId(sUser.getId());
+    	System.out.println("type: " + sUser.getType());
+    	if(sUser.getType() == 2){
+    		ride.setDId(sUser.getId());
+    	}
+    	else if(sUser.getType() == 1){
+    		ride.getrIds().add(sUser.getId());
+    	}
     	ride.setDName(sUser.getName());
     	ride.setCreatedDate(crtDate);
     	database.saveRide(ride);
     	//model.addAttribute("ride", new Ride());
+    	model.addAttribute("suser", sUser);
     	return "redirect:/";
     }
-    @RequestMapping(value = "/ride/{id}", method = RequestMethod.GET)
+    
+    @RequestMapping("/ride/{id}")
     public String ride(Model model, @PathVariable Long id, @ModelAttribute Ride ride, HttpSession session){
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
@@ -102,11 +135,33 @@ public class RideController {
     	}
     	User sUser = (User)session.getAttribute("sessionUser");
     	Ride ride = database.findRideById(id);
-    	ride.getrIds().add(sUser.getId());
+    	if(sUser.getType() == 1){
+    		ride.getrIds().add(sUser.getId());
+    	}
+    	else if(sUser.getType() ==2){
+    		ride.setDId(sUser.getId());
+    	}
     	database.saveRide(ride);
     	model.addAttribute("ride", new Ride());
     	model.addAttribute("suser", sUser);
-    	return "ride";
+    	return "redirect:/user";
+    }
+    
+    @RequestMapping(value = "/ride/leave/{id}")
+    public String leaveRide(Model model, @PathVariable Long id, HttpSession session){
+    	if(session.getAttribute("sessionUser") == null) {
+    		return "redirect:/";
+    	}
+    	User sUser = (User)session.getAttribute("sessionUser");
+    	Ride ride = database.findRideById(id);
+    	ride.getrIds().remove(sUser.getId());
+    	if(ride.getDId() == sUser.getId()){
+    		ride.setDId(null);
+    	}
+    	database.saveRide(ride);
+    	model.addAttribute("ride", new Ride());
+    	model.addAttribute("suser", sUser);
+    	return "redirect:/user";
     }
 }
 

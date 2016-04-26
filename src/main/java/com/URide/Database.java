@@ -486,6 +486,45 @@ public class Database {
 		return list;
 	}
 	/**
+	 * Finds a Ride by unique ID
+	 * 
+	 * @param id
+	 *            unique ID of Ride
+	 * @return a Ride
+	 */
+	public List<Ride> findRidesAllRides() {
+		SQL = "select * from rides";
+		List<Ride> list = jdbcTemplate.query(SQL, new Object[] {},new RideMapper());
+		for(Ride ride: list){
+			System.out.println("id: " + ride.getId());
+		}
+		return list;
+	}
+	/**
+	 * Finds a Ride by unique ID
+	 * 
+	 * @param id
+	 *            unique ID of Ride
+	 * @return a Ride
+	 */
+	public List<Ride> findRidesByUser(User user) {
+		SQL = "select * from rides";
+		List<Ride> list = jdbcTemplate.query(SQL, new Object[] {},new RideMapper());
+		List<Ride> userRides = new ArrayList<>();
+		for(Ride ride: list){
+			if(ride.getrIds().contains(user.getId())){
+				userRides.add(ride);
+			}
+			else if(ride.getDId() == user.getId()){
+				userRides.add(ride);
+			}
+			
+		}
+		return userRides;
+	}
+	
+	
+	/**
 	 * Saves a Ride to the database
 	 * 
 	 * @param ride

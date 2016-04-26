@@ -8,37 +8,42 @@
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"/>
 <!-- Latest compiled and minified JavaScript -->
+<link href="../static/css/main.css"
+          th:href="@{css/main.css}" rel="stylesheet" media="screen"/>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 	<div th:replace="/fragments/navbar :: navbar"></div>
-	<h2 style="display: inline;" th:text="${suser.name}">user name</h2>
+	<div id="content" align="center" style="display: inline-block;margin-left: 25%; width:50%">
 	<form action="#" th:action="@{/ride/find}" th:object="${ride}"
 		method="post">
-		<div class="row">
-		  <div class="col-lg-6">
-		    <div class="input-group">
-		      <h3>From</h3>
-		      <select name="from" class = "form-control" th:field = "*{initialPoint}">
+			  <div class="panel panel-info">
+			<div class="panel-heading">Find A Ride</div>
+			<div class="panel-body">
+			<div>
+		      <label>From</label>
+		      <select name="from" class = "form-control" th:field = "*{initialPoint}" style="width:50%">
 	  			<option value="CHI">Chicago</option>
 	  			<option value="IND">Indianapolis</option>
 	  			<option value="PUR">Purdue</option>
 			  </select>
-			  <h3>To</h3>
-			  <select name="to" class = "form-control" th:field = "*{finalPoint}" >
+			  </div>
+			  <label>To</label>
+			  <select name="to" class = "form-control" th:field = "*{finalPoint}" style="width:50%" >
 	  			<option value="CHI">Chicago</option>
 	  			<option value="IND">Indianapolis</option>
 	  			<option value="PUR">Purdue</option>
-			  </select>
-		      <span class="input-group-addon">
-		        <input type="date" aria-label="hola" th:field="*{date}"></input>
-		      </span>
-		      <button type="submit" class="btn btn-info" value="Submit">SignUp</button>
-		    </div><!-- /input-group -->
-		  </div><!-- /.col-lg-6 -->
-		</div><!-- /.row -->
+			  </select><br></br>
+			  <label>Date</label>
+		       <input style="" type="date" aria-label="hola" th:field="*{date} "></input><br></br><br></br>
+		      <button type="submit" class="btn btn-info" value="Submit">Search</button>
+		       </div>
+		       </div>
 	</form>
+	</div>
 </body>
 </html>

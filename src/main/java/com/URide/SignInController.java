@@ -52,6 +52,6 @@ public class SignInController {
     		return"redirect:/signin";
     	}
     	session.setAttribute("sessionUser", user);
-    	return "redirect:/ride";
+    	return "redirect:/";
     }
 }

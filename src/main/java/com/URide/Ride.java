@@ -1,5 +1,7 @@
 package com.URide;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -133,5 +135,47 @@ public class Ride {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+	public List<Ride> getRidesAfterDate(List<Ride> listRides, Date date) throws ParseException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		List<Ride> newList = new ArrayList<>();
+		for(int i = 0; i < listRides.size(); i ++) {
+			Ride ride = listRides.get(i);
+			Date rideDate = formatter.parse(ride.getDate());
+			if(rideDate.after(date)){
+				newList.add(ride);
+			}
+		}
+		
+		return newList;
+	}
+	public List<Ride> sortRidesByDate(List<Ride> rides) throws ParseException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		//List<Ride> sortedRides = new ArrayList<>();
+		for(int i = 0; i < rides.size()-1; i ++){
+			for(int j = 0; j < rides.size()-1; j ++){
+				Ride ride = rides.get(j);
+				Ride nextRide = rides.get(j+1);
+				Date date = formatter.parse(ride.getDate());
+				Date nextDate = formatter.parse(nextRide.getDate());
+				if(date.after(nextDate)){
+					rides.set(j, nextRide);
+					rides.set(j+1, ride);
+				}
+				else if(date.equals(nextDate)){
+					if(ride.getDepartTime().compareTo(nextRide.getDepartTime()) > 0){
+						rides.set(j, nextRide);
+						rides.set(j+1, ride);
+					}
+				}
+			}
+		}
+		return rides;		
+	}
 	
+	public boolean checkIfUserInRide(User user){
+		if(this.rIds.contains(user.getId()) || this.dId == user.getId()){
+			return true;
+		}
+		return false;
+	}
 }

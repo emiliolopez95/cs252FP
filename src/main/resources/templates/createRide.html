@@ -15,34 +15,42 @@
     <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
             th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
 
-    <link href="../static/css/signup.css"
-          th:href="@{css/signup.css}" rel="stylesheet" media="screen"/>
+    <link href="../static/css/main.css"
+          th:href="@{css/main.css}" rel="stylesheet" media="screen"/>
+          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
+	<div th:replace="/fragments/navbar :: navbar"></div>
+	<div id="content" align="center" style="display: inline-block;margin-left: 25%; width:50%">
 	<form action="#" th:action="@{/ride/create}" th:object="${ride}"
 		method="post">
-		<div class="login-block">
-   			<h1>Create Ride</h1>
-   			<h3>From</h3>
-		      <select name="from" class = "form-control" th:field = "*{initialPoint}">
+		<div class="panel panel-info">
+			<div class="panel-heading">Create A Ride</div>
+			<div class="panel-body">
+			<div>
+   			  <h3>From:</h3>
+		      <select name="from" class = "form-control" th:field = "*{initialPoint}" style="width:50%">
 	  			<option value="CHI">Chicago</option>
 	  			<option value="IND">Indianapolis</option>
 	  			<option value="PUR">Purdue</option>
 			  </select>
-			  <h3>At</h3>
+			</div>
+			 <h3>At:</h3>
 		      <input type="time" name="time_depart" th:field="*{departTime}"></input>
-			  <h3>To</h3>
-			  <select name="to" class = "form-control" th:field = "*{finalPoint}" >
+			  <h3>To:</h3>
+			  <select name="to" class = "form-control" th:field = "*{finalPoint}" style="width:50%">
 	  			<option value="CHI">Chicago</option>
 	  			<option value="IND">Indianapolis</option>
 	  			<option value="PUR">Purdue</option>
 			  </select>
-			  <h3>At</h3>
-		      <input type="time" name="time_depart" th:field="*{arriveTime}"></input>
-   			  <input type="date" aria-label="hola" th:field="*{date}"></input>
-   			  <input type="submit" value="Submit"></input>
+			  <h3>At:</h3>
+		      <input type="time" name="time_depart" th:field="*{arriveTime}"></input><br></br>
+		      <h3>Date:</h3>
+   			  <input type="date" aria-label="hola" th:field="*{date}"></input><br></br><br></br>
+   			  <input type="submit" value="Create"></input><br></br>
+   			  </div>
 		</div>
 	</form>
-
+	</div>
 </body>
 </html>

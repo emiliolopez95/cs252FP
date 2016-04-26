@@ -1,4 +1,10 @@
 @import "bourbon";
+
+body{
+	background: url('https://upload.wikimedia.org/wikipedia/commons/1/1e/Highway_401_by_401-DVP.jpg') no-repeat fixed center center;
+    background-size: cover;
+    font-family: Montserrat;
+}
 .wrapper {	
 	margin-top: 80px;
   margin-bottom: 80px;

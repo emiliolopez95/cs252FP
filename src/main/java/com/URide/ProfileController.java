@@ -1,5 +1,8 @@
 package com.URide;
 
+import java.text.ParseException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -45,19 +48,17 @@ public class ProfileController {
         return "index";
     }
     
-    @RequestMapping("/user/{uId}")
-    public String user(Model model, @PathVariable Long uId, HttpSession session) {
+    @RequestMapping("/user")
+    public String userProfile(Model model, HttpSession session) throws ParseException {
     	if(session.getAttribute("sessionUser") == null) {
-    		return "/";
+    		return "redirect:/";
     	}
-    	User user;
-    	try {
-    		user = database.findUserById(uId);
-    	}catch (DataAccessException e) {
-			// throw 404
-			throw new ResourceNotFoundException("User");
-		}
-    	model.addAttribute("user", user);
-    	return "profile.html";
+    	User user = (User) session.getAttribute("sessionUser");
+    	List<Ride> userRides = database.findRidesByUser(user);
+    	Ride testRide = new Ride();
+    	userRides = testRide.sortRidesByDate(userRides);
+    	model.addAttribute("rides", userRides);
+    	model.addAttribute("suser", user);
+    	return "profile";
     }
 }

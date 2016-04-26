@@ -17,23 +17,27 @@ import com.URide.Database;
 
 @Controller
 @SessionAttributes("sessionUser")
-public class IndexController {
+public class LogoutController {
 	private final Database database;
 	private final HttpServletRequest request;
 	
 	@Autowired
-	public IndexController(Database database, HttpServletRequest request) {
+	public LogoutController(Database database, HttpServletRequest request) {
 		this.request = request;
 		this.database = database;
 	}
-    @RequestMapping("/")
+	
+    @RequestMapping("/logout")
     String index(Model model, HttpSession session){
+
     	if(session.getAttribute("sessionUser") != null) {
-    		System.out.println("username: " + session.getAttribute("sessionUser"));
-    		return "redirect:/user";
+    		session.removeAttribute("sessionUser");
+    		User user = (User)session.getAttribute("sessionUser");
+    		session.invalidate();
+    		if(model.containsAttribute("sessionUser"))
+    			model.asMap().remove("sessionUser");
+    		//System.out.println("username: " + user.getName());
     	}
-    	model.addAttribute("user", new User());
-    	    	
-        return "signin";
+        return "redirect:/";
     }
 }
