@@ -45,9 +45,9 @@ public class SignUpController {
     	if(session.getAttribute("sessionUser") != null) {
     		return "redirect:/";
     	}
-    	if(bindingResult.hasErrors()){
+    	/*if(bindingResult.hasErrors()){
     		return "signup";
-    	}
+    	}*/
     	if(user.getType() == 1){
     		Rider rider = new Rider(user.getName(),user.getLastName(), user.getPassword(),
     				user.getEmail(), user.getType());
@@ -59,6 +59,6 @@ public class SignUpController {
     		database.saveDriver(driver);
     	}
     	
-        return "index";
+        return "redirect:/";
     }
 }

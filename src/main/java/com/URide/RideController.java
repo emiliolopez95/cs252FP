@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.URide.Database;
 
 @Controller
+@RequestMapping(value = "/ride")
 @SessionAttributes("sessionUser")
 public class RideController {
 	private final Database database;
@@ -30,10 +31,11 @@ public class RideController {
 		this.request = request;
 		this.database = database;
 	}
-	@RequestMapping("/ride")
+	@RequestMapping("")
     public String ride(Model model, HttpSession session){
 		if(session.getAttribute("sessionUser") == null) {
 			return "redirect:/";
+			
     	}
 		User suser = (User)session.getAttribute("sessionUser");
 		model.addAttribute("suser", suser);
@@ -41,8 +43,7 @@ public class RideController {
     	    	
         return "rides";
     }
-	
-    @RequestMapping("/ride/find")
+    @RequestMapping("/find")
     public String findRide(Model model, @ModelAttribute Ride ride, HttpSession session){
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
@@ -57,7 +58,7 @@ public class RideController {
         return "findRides";
     }
     
-    @RequestMapping("/ride/all")
+    @RequestMapping("/all")
     public String allRides(Model model, HttpSession session) throws ParseException{
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
@@ -80,7 +81,7 @@ public class RideController {
     	    
         return "allRides";
     }
-    @RequestMapping(value = "/ride/create", method = RequestMethod.GET)
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
     public String newRide(Model model, HttpSession session){
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
@@ -89,7 +90,7 @@ public class RideController {
     	model.addAttribute("ride", new Ride());
     	return "createRide";
     }
-    @RequestMapping(value = "/ride/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     public String createRide(Model model, @ModelAttribute Ride ride, HttpSession session){
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
@@ -113,7 +114,7 @@ public class RideController {
     	return "redirect:/";
     }
     
-    @RequestMapping("/ride/{id}")
+    @RequestMapping("/{id}")
     public String ride(Model model, @PathVariable Long id, @ModelAttribute Ride ride, HttpSession session){
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
@@ -128,7 +129,7 @@ public class RideController {
     	return "ride";
     }
     
-    @RequestMapping(value = "/ride/join/{id}")
+    @RequestMapping(value = "/join/{id}")
     public String joinRide(Model model, @PathVariable Long id, HttpSession session){
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
@@ -147,7 +148,7 @@ public class RideController {
     	return "redirect:/user";
     }
     
-    @RequestMapping(value = "/ride/leave/{id}")
+    @RequestMapping(value = "/leave/{id}")
     public String leaveRide(Model model, @PathVariable Long id, HttpSession session){
     	if(session.getAttribute("sessionUser") == null) {
     		return "redirect:/";
